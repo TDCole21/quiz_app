@@ -1,0 +1,199 @@
+{%extends 'layouts/layout.html'%}
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/quiz.css') }}">
+</head>
+
+{%block body%}
+<!-- !PAGE CONTENT! -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="w3-container w3-red">
+        {{ messages[0] }}
+    </div>
+{% endif %}
+{% endwith %}
+
+<hr>
+
+  <h2><a href="{{ url_for('quiz_template', quiz_ID = question_info['Quiz_ID']) }}">Quiz: {{question_info['Quiz_Name']}}</a></h2>
+  <h3><a href="{{ url_for('round_template', round_ID = question_info['Round_ID']) }}">Round {{question_info['Round_Order']}}: {{question_info['Round_Name']}}</a></h3>
+  <h4>Question: {{question_info['Question_Order']}}</h4>
+
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+<p>Question Tag: {{question_info['Question_Tag']}}</p>
+  <input type="text" placeholder="New Question Tag" name="question_update" id="question_update" required maxlength="50" pattern="[^&quot,']+"> <br>
+  <input type="hidden" name="question_update_field" value="Question_Tag"/>
+  <button type="submit" class="registerbtn">Update Question Tag</button>
+</form>
+
+
+{% if noOfQuestions > 1 %}
+  <form method="POST" action="{{ url_for('change_order', ID = question_info['Question_ID']) }}">
+    <select name="new_order" id="new_order">
+      {% for j in range(1,noOfQuestions+1) %}
+        {% if j != question_info['Question_Order'] %}
+          <option value="{{j}}">{{j}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <input type="submit" value="Change Order">
+    <input type="hidden" name="old_order" value="{{question_info['Question_Order']}}">
+    <input type="hidden" name="order_type" value="Question">
+    <input type="hidden" name="source_point" value="question">
+    <input type="hidden" name="source_point_ID" value="{{question_info['Question_ID']}}">
+  </form>
+{% endif %}
+<hr>
+
+<p>Question:</p>
+<p>{{question_info['Question']}}</p>
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <textarea rows="2" cols="20" placeholder="New Question" name="question_update" id="question_update" required wrap="soft"></textarea> <br>
+  <input type="hidden" name="question_update_field" value="Question"/>
+  <button type="submit" class="registerbtn">Update Question</button>
+</form>
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <input type="hidden" name="question_update_field" value="Question"/>
+  <input type="hidden" name="question_update" value="NULL"/>
+  {% if question_info['Question'] is not none %}
+    <button type="submit" class="registerbtn">Remove Question</button>
+  {% endif %}
+</form>
+<hr>
+
+<p>Answer:</p>
+<p>{{question_info['Correct_Answer']}}</p>
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <textarea rows="2" cols="20" placeholder="New Answer" name="question_update" id="question_update" required wrap="soft"></textarea> <br>
+  <input type="hidden" name="question_update_field" value="Correct_Answer"/>
+  <button type="submit" class="registerbtn">Update Answer</button>
+</form>
+{% if question_info['Correct_Answer'] is not none %}
+  <form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+    <input type="hidden" name="question_update_field" value="Correct_Answer"/>
+    <input type="hidden" name="question_update" value="NULL"/>
+    <button type="submit" class="registerbtn">Remove Answer</button>
+  {% endif %}
+</form>
+<hr>
+
+<p>Points:</p>
+<p>{{question_info['Points']}}</p>
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <input type="text" placeholder="New Points" name="question_update" id="question_update" required maxlength="3" pattern="[^&quot,']+"> <br>
+  <input type="hidden" name="question_update_field" value="Points"/>
+  <button type="submit" class="registerbtn">Update Points</button>
+</form>
+{% if question_info['Points'] is not none %}
+  <form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+    <input type="hidden" name="question_update_field" value="Points"/>
+    <input type="hidden" name="question_update" value="NULL"/>
+    <button type="submit" class="registerbtn">Remove Points</button>
+  {% endif %}
+</form>
+<hr>
+
+{% if question_info['Video_url'] is none %}
+  <p>Add a video</p>
+{% else %}
+  <p>Change video</p>
+{% endif %}
+<!-- Update to be able to include multiple videos -->
+<!-- Currently needs a special embeded link -->
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <input type="text" placeholder="YouTube url" name="question_update" id="question_update" required maxlength="100" pattern="[^&quot,']+"> <br>
+  <input type="hidden" name="question_update_field" value="Video_url"/>
+  <button type="submit" class="registerbtn">Add video</button>
+</form>
+{% if question_info['Video_url'] is not none %}
+  <form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+    <input type="hidden" name="question_update_field" value="Video_url"/>
+    <input type="hidden" name="question_update" value="NULL"/>
+    <center>
+      <p>Current video</p>
+      <!-- Will look at eventually hosting the video on Azure -->
+      <iframe width="80%" height="345" allow="fullscreen" src="{{question_info['Video_url']}}"></iframe> <br>
+      <button type="submit" class="registerbtn">Remove video</button>
+    </center>
+  {% endif %}
+</form>
+
+
+<hr>
+
+{% if question_info['Image_url'] is none %}
+  <p>Add an image</p>
+{% else %}
+  <p>Change image</p>
+{% endif %}
+<!-- Update to be able to include multiple images -->
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <input type="text" placeholder="Image url" name="question_update" id="question_update" required maxlength="100" pattern="[^&quot,']+"> <br>
+  <input type="hidden" name="question_update_field" value="Image_url"/>
+  <button type="submit" class="registerbtn">Add image</button>
+</form>
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <input type="hidden" name="question_update_field" value="Image_url"/>
+  <input type="hidden" name="question_update" value="NULL"/>
+  {% if question_info['Image_url'] is not none %}
+    <center>
+      <p>Current image</p>
+      <!-- Will look at eventually hosting the image on Azure -->
+      <img src="{{question_info['Image_url']}}" alt="Question {{question_info['Question_Order']}}" width="80%" height="345">
+      <button type="submit" class="registerbtn">Remove image</button> <br>
+    </center>
+  {% endif %}
+</form>
+<hr>
+
+
+{% if question_info['Audio_url'] is none %}
+  <p>Add audio</p>
+{% else %}
+  <p>Change audio</p>
+{% endif %}
+<!-- Update to be able to include multiple audio files -->
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <input type="text" placeholder="Audio url" name="question_update" id="question_update" required maxlength="100" pattern="[^&quot,']+"> <br>
+  <input type="hidden" name="question_update_field" value="Audio_url"/>
+  <button type="submit" class="registerbtn">Add audio</button>
+</form>
+<form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
+  <input type="hidden" name="question_update_field" value="Audio_url"/>
+  <input type="hidden" name="question_update" value="NULL"/>
+  {% if question_info['Audio_url'] is not none %}
+    <center>
+      <!-- Will look at eventually hosting the audio on Azure -->
+      <p>Current audio</p> 
+      <iframe
+      frameborder="0"
+      width="400"
+      height="200"
+      src="{{question_info['Audio']}}">
+      </iframe> <br>
+      <button type="submit" class="registerbtn">Remove audio</button>
+    </center>
+  {% endif %}
+</form>
+<hr>
+
+{% if question_info['Question_Order'] != 1 %}
+<div class="w3-button">
+  <p><a href="{{ url_for('question_template', question_ID = previous_question_info['Question_ID']) }}">Previous Question</a></p>
+</div>
+{% endif %}
+<div class="w3-button">
+  <p><a href="{{ url_for('delete_question', source_point='round', question_ID = question_info['Question_ID']) }}">Delete Question</a></p>
+</div>
+<div class="w3-button">
+{% if question_info['Question_Order'] == noOfQuestions %}
+  <p><a href="{{ url_for('create_question', round_ID = question_info['Round_ID']) }}">Add Question</a></p>
+{% else %}
+  <p><a href="{{ url_for('question_template', question_ID = next_question_info['Question_ID']) }}">Next Question</a></p>
+{% endif %}
+</div>
+<hr>
+
+<!-- End page content -->
+{%endblock%}

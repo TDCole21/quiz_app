@@ -1,0 +1,29 @@
+{%extends 'layouts/layout.html'%}
+
+{%block body%}
+
+<!-- !PAGE CONTENT! -->
+
+{% if session['admin'] == 1 %}
+
+    <div class="w3-button">
+        <p><a href="{{ url_for('quiz_maker') }}">Make/Edit a Quiz</a></p>
+    </div>
+
+    <hr>
+
+    <div class="w3-button">
+        <p><a href="{{ url_for('host_a_quiz') }}">Host a Quiz</a></p>
+    </div>
+
+    <hr>
+
+{% endif %}
+
+<div class="w3-button">
+    <p><a href="{{ url_for('join_a_quiz') }}">Join a Quiz</a></p>
+</div>
+
+<!-- End page content -->
+
+{%endblock%}

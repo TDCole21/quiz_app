@@ -1,0 +1,92 @@
+{%extends 'layouts/layout.html'%}
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/quiz.css') }}">
+</head>
+
+{%block body%}
+<!-- !PAGE CONTENT! -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="w3-container w3-red">
+        {{ messages[0] }}
+    </div>
+{% endif %}
+{% endwith %}
+
+
+<h2><a href="{{ url_for('quiz_template', quiz_ID = round_info['Quiz_ID']) }}">Quiz: {{round_info['Quiz_Name']}}</a></h2>
+<form method="POST" action="{{ url_for('update_round_name', round_ID=round_info['Round_ID']) }}">
+  <h3>Round {{round_info['Round_Order']}}: {{round_info['Round_Name']}}</h3>
+  <input type="text" placeholder="New Round name" name="new_round_name" id="new_round_name" required maxlength="50" pattern="[^&quot,']+">
+  <button type="submit" class="registerbtn">Update Round name</button>
+</form>
+
+<hr>
+<h2>Round Description:</h2>
+<p>{{round_info['Round_Description']}}</p>
+<form method="POST" action="{{ url_for('update_round_description', round_ID=round_info['Round_ID']) }}">
+  <textarea rows = "2" cols = "20" placeholder="New Round description" name="new_round_description" id="new_round_description" required wrap="soft"></textarea>
+  <button type="submit" class="registerbtn">Update Round description</button>
+</form>
+
+
+
+{% if number_of_rounds > 1 %}
+  <hr>
+  <form method="POST" action="{{ url_for('change_order', ID=round_info['Round_ID']) }}">
+    <select name="new_order" id="new_order">
+      {% for j in range(1,number_of_rounds+1) %}
+        {% if j != round_info['Round_Order'] %}
+          <option value="{{j}}">{{j}}</option>
+        {% endif %}
+      {% endfor %}
+    </select>
+    <input type="submit" value="Change Order">
+    <input type="hidden" name="old_order" value="{{round_info['Round_Order']}}">
+    <input type="hidden" name="order_type" value="Round">
+    <input type="hidden" name="source_point" value="round">
+    <input type="hidden" name="source_point_ID" value="{{round_info['Round_ID']}}">
+  </form>
+{% endif %}
+
+<hr>
+
+<p>Current Questions:</p>
+{% for i in question_info %}
+  Question {{i['Question_Order']}}: {{i['Question_Tag']}}
+  <div class="w3-button">
+    <p><a href="{{ url_for('question_template', question_ID=i['Question_ID']) }}">Edit</a></p>
+  </div>
+  <div class="w3-button">
+    <p><a href="{{ url_for('delete_question', source_point='round', question_ID=i['Question_ID']) }}">Delete</a></p>
+  </div>
+    <br>
+    {% if question_info|length >1 %}
+    <form method="POST" action="{{ url_for('change_order', ID=i['Question_ID']) }}">
+      <select name="new_order" id="new_order">
+        {% for m in (question_info[:i['Question_Order']-1]+question_info[i['Question_Order']:]) %}
+        <option value="{{m['Question_Order']}}">{{m['Question_Order']}}</option>
+        {% endfor %}
+      </select>
+      <input type="submit" value="Change Order">
+      <input type="hidden" name="old_order" value="{{i['Question_Order']}}">
+      <input type="hidden" name="order_type" value="Question">
+      <input type="hidden" name="source_point" value="round">
+      <input type="hidden" name="source_point_ID" value="{{round_info['Round_ID']}}">
+    </form>
+    {% endif %}
+{% endfor %}
+<div class="w3-button">
+  <p><a href="{{ url_for('create_question', round_ID=round_info['Round_ID']) }}">Add Question</a></p>
+</div>
+<hr>
+
+<div class="w3-button">
+  <p><a href="{{ url_for('delete_round', round_ID=round_info['Round_ID']) }}">Delete Round</a></p>
+</div>
+
+<hr>
+
+<!-- End page content -->
+{%endblock%}

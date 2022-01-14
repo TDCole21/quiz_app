@@ -1,0 +1,29 @@
+{%extends 'layouts/layout.html'%}
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/quiz.css') }}">
+</head>
+
+{%block body%}
+<!-- !PAGE CONTENT! -->
+<hr>
+
+<table class="w3-table">
+    <tr>
+      <th>Position</th>
+      <th>Name</th>
+      <th>Score</th>
+    </tr>
+    {% for result in final_results %}
+      <tr>
+        <td>{{result['Position']}}</td>
+        <td>{{result['User_Name']}}</td>
+        <td>{{result['Points']}}</td>
+      </tr>
+    {% endfor %}
+  </table>
+
+<hr>
+
+<!-- End page content -->
+{%endblock%}

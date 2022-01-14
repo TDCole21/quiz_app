@@ -1,0 +1,14 @@
+{%extends 'layouts/layout.html'%}
+
+{%block body%}
+<!-- !PAGE CONTENT! -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="w3-container w3-red">
+        {{ messages[0] }}
+    </div>
+{% endif %}
+{% endwith %}
+
+<!-- End page content -->
+{%endblock%}

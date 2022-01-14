@@ -1,0 +1,60 @@
+{%extends 'layouts/layout.html'%}
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/quiz.css') }}">
+</head>
+
+{%block body%}
+
+<!-- !PAGE CONTENT! -->
+
+<!-- This will display upcoming quizzes.
+Unsure if I'll create a separate page to display basic info on the quiz or to have it displayed on this page -->
+
+<h2>Upcoming Quizzes:</h2>
+{% for quiz in quiz_info %}
+  {% for participant in participant_info if participant['Quiz_ID'] == quiz['Quiz_ID'] %}
+    {% if quiz['Active'] == 0 and not quiz['Completed'] and participant['User_ID'] == session['id'] %}
+      <div class="w3-button">
+        <p><a href="{{ url_for('live_quiz', quiz_ID=quiz['Quiz_ID']) }}">{{quiz["Quiz_Name"]}}</a></p>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+<hr>
+
+<!-- This will display ongoing quizzes.
+Unsure if I'll create a separate page to display basic info on the quiz or to have it displayed on this page -->
+
+<h2>Active Quizzes:</h2>
+
+{% for quiz in quiz_info %}
+  {% for participant in participant_info if participant['Quiz_ID'] == quiz['Quiz_ID'] %}
+    {% if quiz['Active'] == 1 and participant['User_ID'] == session['id'] %}
+      <div class="w3-button">
+        <p><a href="{{ url_for('live_quiz', quiz_ID=quiz['Quiz_ID']) }}">{{quiz["Quiz_Name"]}}</a></p>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+<hr>
+
+<!-- This will display past quizzes.
+Unsure if I'll create a separate page to display basic info on the quiz or to have it displayed on this page -->
+
+<h2>Previous Quizzes:</h2>
+
+{% for quiz in quiz_info %}
+  {% for participant in participant_info if participant['Quiz_ID'] == quiz['Quiz_ID'] %}
+    {% if quiz['Completed'] and participant['User_ID'] == session['id'] %}
+      <div class="w3-button">
+        <p><a href="{{ url_for('live_quiz', quiz_ID=quiz['Quiz_ID']) }}">{{quiz["Quiz_Name"]}}</a></p>
+      </div>
+    {% endif %}
+  {% endfor %}
+{% endfor %}
+
+<!-- End page content -->
+{%endblock%}

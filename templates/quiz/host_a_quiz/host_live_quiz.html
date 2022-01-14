@@ -1,0 +1,185 @@
+{%extends 'layouts/layout.html'%}
+
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/quiz.css') }}">
+</head>
+
+{%block body%}
+<!-- !PAGE CONTENT! -->
+<!-- Header -->
+<center>
+
+{% if round_info %}
+  <h2>Round {{round_info['Round_Order']}}: {{round_info['Round_Name']}}</h2>
+{% endif %}
+
+{% if question_info %}
+  <h3>Question {{question_info['Question_Order']}}</h3>
+{% endif %}
+<p><a href="{{ url_for('host_live_quiz', quiz_ID=quiz_info['Quiz_ID']) }}">Latest Question</a></p>
+</center>
+<hr>
+
+
+<!-- Quiz starting page -->
+<!-- Participants ready list -->
+{% if not round_info %}
+  <p>{{quiz_info['Quiz_Description']}}</p>
+  <h4>Participants</h4>
+  <table class="w3-table">
+    <tr>
+      <th>Name</th>
+      <th>Ready?</th>
+    </tr>
+    {% for i in participant_info %}
+      <tr>
+        <td>{{i['Username']}}</td>
+        {% if i['Ready'] == 1 %}
+          <td>Yes</td>
+        {% else %}
+          <td>No</td>
+        {% endif %}
+      </tr>
+    {% endfor %}
+  </table>
+  <hr>
+  {% if start %}
+    {% if not quiz_info['Completed'] %}
+      <div class="w3-button">
+        <p><a href="{{ url_for('start_quiz', quiz_ID=quiz_info['Quiz_ID']) }}">Start Quiz</a></p>
+      </div>
+    {% else %}
+      <p>The Quiz has finished, view the <a href="{{ url_for('results', quiz_id=quiz_info['Quiz_ID']) }}">Results</a></p>
+    {% endif %}
+  {% else %}
+    <p>Not all users are ready</p>
+  {% endif %}
+  <hr>
+{% endif %}
+
+<!-- Round starting page -->
+{% if round_info and not question_info %}
+  <p>{{round_info['Round_Description']}}</p>
+  <hr>
+  {% if round_info['Completed'] == 0 %}
+    <form method="POST" action="{{ url_for('start_round', quiz_ID=quiz_info['Quiz_ID']) }}">
+      <button name="round_id" type="submit" class="w3-button" value="{{round_info['Round_ID']}}">Start Round</button>
+    </form>
+  {% endif %}
+  <hr>
+{% endif %}
+
+ <!-- Question Information -->
+{% if question_info %}
+  <h4>Question:</h4>
+  <p>{{question_info['Question']}}</p>
+
+  {% if question_info['Video_url'] is not none %}
+      <center>
+        <iframe width="80%" height="345"  allow="fullscreen" src="{{question_info['Video_url']}}"></iframe> <br>
+      </center>
+  {% endif %}
+
+  {% if question_info['Image_url'] is not none %}
+      <center>
+        <img src="{{question_info['Image_url']}}" alt="Question {{question_info['Question_Order']}}">
+      </center>
+  {% endif %}
+
+  {% if question_info['Audio_url'] is not none %}
+      <center>
+        <iframe
+        frameborder="0"
+        width="400"
+        height="200"
+        src="{{question_info['Audio_url']}}">
+        </iframe>
+      </center>
+  {% endif %}
+
+  {% if quiz_info['Completed'] %}
+  <h4>Correct Answer</h4>
+  <p>{{question_info['Correct_Answer']}}</p>
+  <hr>
+  {% endif %}
+
+
+  <!-- Host information -->
+  Reveal Question?
+  Stop answer submissions?
+  <hr>
+
+{% endif %}
+
+<!-- Participants Answers -->
+{% if answer_info %}
+  <h4>User Answers:</h4>
+  {% for i in answer_info %}
+    <form method="POST" action="{{ url_for('mark_answer', quiz_ID=quiz_info['Quiz_ID']) }}">
+      <p>{{i['Username']}}: {{i['Answer']}}</p>
+      {% if i['Correct'] == 1 %}
+        <input type="radio" id="1" name="marked_answer" value="1" checked>
+      {% else %}
+        <input type="radio" id="1" name="marked_answer" value="1">
+      {% endif %}
+      <label for="1">Correct</label><br>
+      {% if i['Correct'] == 0 %}
+        <input type="radio" id="0" name="marked_answer" value="0" checked>
+      {% else %}
+        <input type="radio" id="0" name="marked_answer" value="0">
+      {% endif %}
+      <label for="0">Wrong</label><br>
+      <button type="submit" class="registerbtn">Mark Answer</button>
+      <input type ="hidden" id="question_ID" name="question_ID" value="{{question_info['Question_ID']}}">
+      <input type ="hidden" id="user_ID" name="user_ID" value="{{i['User_ID']}}">
+    </form>
+  {% endfor %}
+  {% if answer_info|length == participant_info|length %}
+    <h5>All participants have answered</h5>
+  {% endif %}
+  <hr>
+{% endif %}
+
+<!-- Next question -->
+{% if not question_info['Completed'] and question_info['Active'] %}
+  <form method="POST" action="{{ url_for('start_question', quiz_ID=quiz_info['Quiz_ID']) }}">
+    <button name="question_id" type="submit" class="w3-button" value="{{question_info['Question_ID']}}">Next Question</button>
+    <input type='hidden' id='round_id' name='round_id' value="{{round_info['Round_ID']}}">
+    <input type='hidden' id='question_id' name='question_id' value="{{question_info['Question_ID']}}">
+  </form>
+{% endif %}
+
+<!-- Footer -->
+{% if active_rounds %}
+  <h4>Previous Questions</h4>
+  <table style="width:100%"><tr>
+    {% for round in active_rounds %}  
+      <td>
+        <table>
+          <tr>
+            <th>
+              <form method="POST" action="{{ url_for('host_live_quiz', quiz_ID=quiz_info['Quiz_ID']) }}">
+                <button name="round_id" type="submit" class="w3-button" value="{{round['Round_ID']}}">Round {{round['Round_Order']}}: {{round['Round_Name']}}</button>
+              </form>
+            </th>
+          </tr>
+          {% for question in all_questions %}
+            {% if question['Round_ID'] == round['Round_ID'] and (question['Completed'] == 1 or question['Active'] == 1) %}  
+              <tr>
+                <td>
+                  <form method="POST" action="{{ url_for('host_live_quiz', quiz_ID=quiz_info['Quiz_ID']) }}">
+                    <button name="question_id" type="submit" class="w3-button" value="{{question['Question_ID']}}">Question {{question['Question_Order']}}: {{question['Question_Tag']}}</button>
+                  </form>
+                </td>
+              </tr>
+            {% endif %}
+          {% endfor %}
+        </table>
+      </td>
+    {% endfor %}
+  </tr></table>
+{% endif %}
+
+<!-- End page content -->
+{%endblock%}

@@ -1,0 +1,47 @@
+{%extends 'layouts/layout.html'%}
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/quiz.css') }}">
+</head>
+
+{%block body%}
+<!-- !PAGE CONTENT! -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+    <div class="w3-container w3-red">
+        {{ messages[0] }}
+        {% if messages[1] == 'login' %}
+          Go to <a href="{{ url_for('login') }}">login page</a>.
+        {% endif %}
+    </div>
+{% endif %}
+{% endwith %}
+
+<hr>
+
+<h2>Make a new Quiz:</h2>
+<form method="POST" action="{{ url_for('create_quiz') }}">
+  <input type="text" placeholder="Quiz name" name="quiz_name" id="quiz_name" required maxlength="50" pattern="[^&quot,']+">
+  <button type="submit" class="registerbtn">Create Quiz</button>
+</form>
+
+<hr>
+
+{%if quiz_info|length > 0 %}
+<h2>Edit a Quiz:</h2>
+{% for i in quiz_info %}
+<h3>{{i["Quiz_Name"]}}</h3>
+<div class="w3-button">
+  <p><a href="{{ url_for('quiz_template', quiz_ID=i['Quiz_ID']) }}">Edit</a></p>
+</div>
+<div class="w3-button">
+  <p><a href="{{ url_for('delete_quiz', quiz_ID=i['Quiz_ID']) }}">Delete</a></p>
+</div>
+<br>
+{% endfor %}
+{%endif %}
+
+<hr>
+
+<!-- End page content -->
+{%endblock%}

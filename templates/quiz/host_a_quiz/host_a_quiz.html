@@ -1,0 +1,30 @@
+{%extends 'layouts/layout.html'%}
+
+<head>
+  <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='styles/quiz.css') }}">
+</head>
+
+{%block body%}
+<!-- !PAGE CONTENT! -->
+<hr>
+
+{%if quiz_info|length > 0 %}
+<h2>Host a Quiz:</h2>
+{% for quiz in quiz_info %}
+<div class="w3-button">
+  <p><a href="{{ url_for('host_live_quiz', quiz_ID=quiz['Quiz_ID']) }}">{{quiz["Quiz_Name"]}}</a></p>
+</div>
+{% endfor %}
+{% else %}
+<p>There are currently no Quizzes.</p>
+<form method="POST" action="{{ url_for('create_quiz') }}">
+  <input type="text" placeholder="Quiz name" name="quiz_name" required maxlength="50" pattern="[^&quot,']+">
+  <button type="submit" class="registerbtn">Create Quiz</button>
+</form>
+{%endif %}
+
+
+<hr>
+
+<!-- End page content -->
+{%endblock%}
