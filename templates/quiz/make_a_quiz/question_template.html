@@ -22,7 +22,7 @@
 
 <form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
 <p>Question Tag: {{question_info['Question_Tag']}}</p>
-  <input type="text" placeholder="New Question Tag" name="question_update" id="question_update" required maxlength="50" pattern="[^&quot,']+"> <br>
+  <input type="text" placeholder="New Question Tag" name="question_update" id="question_update"  pattern="[^&quot,']+"> <br>
   <input type="hidden" name="question_update_field" value="Question_Tag"/>
   <button type="submit" class="registerbtn">Update Question Tag</button>
 </form>
@@ -102,7 +102,7 @@
 <!-- Update to be able to include multiple videos -->
 <!-- Currently needs a special embeded link -->
 <form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
-  <input type="text" placeholder="YouTube url" name="question_update" id="question_update" required maxlength="100" pattern="[^&quot,']+"> <br>
+  <input type="text" placeholder="YouTube url" name="question_update" id="question_update" pattern="[^&quot,']+"> <br>
   <input type="hidden" name="question_update_field" value="Video_url"/>
   <button type="submit" class="registerbtn">Add video</button>
 </form>
@@ -129,7 +129,7 @@
 {% endif %}
 <!-- Update to be able to include multiple images -->
 <form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
-  <input type="text" placeholder="Image url" name="question_update" id="question_update" required maxlength="100" pattern="[^&quot,']+"> <br>
+  <input type="text" placeholder="Image url" name="question_update" id="question_update" pattern="[^&quot,']+"> <br>
   <input type="hidden" name="question_update_field" value="Image_url"/>
   <button type="submit" class="registerbtn">Add image</button>
 </form>
@@ -140,7 +140,7 @@
     <center>
       <p>Current image</p>
       <!-- Will look at eventually hosting the image on Azure -->
-      <img src="{{question_info['Image_url']}}" alt="Question {{question_info['Question_Order']}}" width="80%" height="345">
+      <img src="{{question_info['Image_url']}}" alt="Question {{question_info['Question_Order']}}" width="50%">
       <button type="submit" class="registerbtn">Remove image</button> <br>
     </center>
   {% endif %}
@@ -155,7 +155,7 @@
 {% endif %}
 <!-- Update to be able to include multiple audio files -->
 <form method="POST" action="{{ url_for('update_question', question_ID = question_info['Question_ID']) }}">
-  <input type="text" placeholder="Audio url" name="question_update" id="question_update" required maxlength="100" pattern="[^&quot,']+"> <br>
+  <input type="text" placeholder="Audio url" name="question_update" id="question_update" pattern="[^&quot,']+"> <br>
   <input type="hidden" name="question_update_field" value="Audio_url"/>
   <button type="submit" class="registerbtn">Add audio</button>
 </form>
@@ -170,7 +170,7 @@
       frameborder="0"
       width="400"
       height="200"
-      src="{{question_info['Audio']}}">
+      src="{{question_info['Audio_url']}}">
       </iframe> <br>
       <button type="submit" class="registerbtn">Remove audio</button>
     </center>
