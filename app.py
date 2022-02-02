@@ -1708,7 +1708,8 @@ def results(quiz_id):
         return redirect(url_for('home')) 
     
     else:
-
+        for participant in participant_info:
+            participant['Points'] = 0
 
         all_questions = common_values_not_unique(
             "Question_ID", 
@@ -1731,7 +1732,7 @@ def results(quiz_id):
                 "ON Rounds.Round_ID = Questions.Round_ID "
                 "INNER JOIN  Answers "
                 "ON Answers.Question_ID = Questions.Question_ID "
-                "WHERE Answers.Correct = 1 AND Questions.Question_ID = " + str(question['Question_ID'])
+                "WHERE Answers.Correct = 1 AND Questions.Question_ID = " + str(question['Question_ID']) + " AND Quiz.Quiz_ID = " + str(quiz_id)
                 )
             sorted_question_info = sorted(question_info, key=lambda d: d['Timestamp'])
 
@@ -1742,23 +1743,21 @@ def results(quiz_id):
 
             x = 0
             if int(question_points['Points']) < len(sorted_question_info):
-                while x < int(question_points['Points']):
+                for x in range(int(question_points['Points'])):
                     for participant in participant_info:
                         if sorted_question_info[x]['User_ID'] == participant['User_ID']:
                             if 'Points' not in participant:
                                 participant['Points'] = int(question_points['Points']) - x
                             else:
                                 participant['Points'] = int(participant['Points']) + int(question_points['Points']) - x
-                        x = x+1
             else:
-                while x < len(sorted_question_info):
+                for x in range(len(sorted_question_info)):
                     for participant in participant_info:
-                        if sorted_question_info[x-1]['User_ID'] == participant['User_ID']:
+                        if sorted_question_info[x]['User_ID'] == participant['User_ID']:
                             if 'Points' not in participant:
                                 participant['Points'] = int(question_points['Points']) - x
                             else:
                                 participant['Points'] = int(participant['Points']) + int(question_points['Points']) - x
-                        x = x+1
 
         # Not sure why I need the reverse        
         final_results = sorted(participant_info, key=lambda d: d['Points'], reverse=True)
@@ -1774,7 +1773,7 @@ def results(quiz_id):
         return render_template(
             "quiz/results.html",
             name = "Results",
-            final_results = final_results
+            final_results = final_results,
         )
 
 #######################################################################################################################################################################
