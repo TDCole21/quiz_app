@@ -29,7 +29,7 @@ The idea of this Quiz App is to be a 24/7 hosted application, that allows users 
 
 ### Current Version <a name="current_features"></a>
 + Users can create a personal profile
-* Username
+    * Username
 * Password
 * Email Address
 + Admin users can create quizes and host them
