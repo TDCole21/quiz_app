@@ -1,33 +1,47 @@
+To Do:
+- Write full documentation on the ReadMe
+
+- Gitignore for data.info.py
+
+- Set up proper sprint activities and agile methodology
+
 - Change some of the API queries from URL to POST requests:
     - Delete Quiz
     - Create Quiz
-- Question Template
-    - Add field for "Complete" in Quesstions, Rounds and Quiz ✓
-    - Update line 1315 in app.py to bring information about the current live question ✓
-    - The user URL is just for the quiz ✓
-    - Add list in HMTL for User Question, showing all completed Quesstions ✓
-            - This is how the user will go back to previous Quesstions ✓
-    - Add next question button that will take user to current Active question ✓ (changed idea)
-    - Change next question button for host, to mark current question as completed and not active, next question as active and redirect host to new active question ✓
+
 - Give a quiz a "host" who are the only ones that can host and activate the Quiz
-- " are not allowed in the text boxes. This needs to be fixed ✓
-- Start Quiz button ✓
-    - Needs to make the current quiz active ✓ 
-    - Also needs to make the first round active ✓
-- Start/Next Round button ✓
-    - Needs to make the round active if not already. ✓
-    - Needs to make first Question active ✓
-    - Needs to not appear if another round is active ✓
-- Start/Next Question button ✓
-    - Needs to make the question active if not already ✓
-    - Needs to make previous question no longer active, but completed ✓
-- End Quiz button ✓
-    - Needs to deactivate quiz ✓
-    - Needs to mark quiz as completed. ✓
+
 - Create a function that calls a random flash message if somebody tries to url force their way to a page they're not meant to
+
 - Update the syntax to match through all py files and html. For example Question_ID not question_id or question_ID
+
 - Change next question button on host, to show next round, end quiz etc.
+
 - Update get values function to get_value and get_values
+
+- Containerisation
+    - Use Docker and Kubernetes to containerise quiz app
+        - Containers for:
+            - Results
+            - Quiz
+
+- Set up CI/CD pipeline:
+    - Jenkins CI
+    - Terraform
+    - ASG
+    - LB (with stick sessions)
+
+- S3 object storage for pictures, videos etc.
+    - This to be used in conjunction with links
+
+- Quiz/Questions needs scoring options:
+    - First correct gets 10 -> 1
+    - Maybe also have it from +10 -> -10?
+    - Points for correct answer regardless of speed
+    - Loose points for incorrect
+    - Fastest finger
+
+
 - Results need User ID, Question ID, Correct, Points, Timestamp
     SELECT  Answers.User_ID, Answers.Correct, Answers.Timestamp,
             Questions.Question_ID, Questions.Points
@@ -38,3 +52,71 @@
     ON Rounds.Round_ID = Questions.Round_ID
     INNER JOIN  Answers
     ON Answers.Question_ID = Questions.Question_ID;
+
+- Update Database Tables:
+    - Questions:
+        - Add question type
+        - Add options for hints
+    - Rounds:
+        - Add Round type
+    - Create Question/Round type:
+        - Sports
+        - Entertainment:
+            - Music
+            - TV
+            - Movies
+            - Video Games
+            - Books
+            - Theatre/Plays
+            - Musicals
+            - Boardgames
+        - Science:
+            - Psycology
+            - Physics
+            - Maths
+            - Chemistry
+            - Engineering
+            - Biology
+            - Computer Science
+        - History
+        - Politics
+        - Geography
+        - Religion
+        - Culture
+        - Time sensitive
+    - Maybe have separate category table and allow a one to many relationship with itself and questions/rounds
+    - Users:
+        - Profile picture
+        - Friend list
+        - Level (experience points from winning quizzes)
+        - Achivements
+
+
+Completed:
+- Start Quiz button ✓
+    - Needs to make the current quiz active ✓ 
+    - Also needs to make the first round active ✓
+
+- Start/Next Round button ✓
+    - Needs to make the round active if not already. ✓
+    - Needs to make first Question active ✓
+    - Needs to not appear if another round is active ✓
+
+- Start/Next Question button ✓
+    - Needs to make the question active if not already ✓
+    - Needs to make previous question no longer active, but completed ✓
+
+- End Quiz button ✓
+    - Needs to deactivate quiz ✓
+    - Needs to mark quiz as completed. ✓
+
+- " are not allowed in the text boxes. This needs to be fixed ✓
+
+- Question Template
+    - Add field for "Complete" in Quesstions, Rounds and Quiz ✓
+    - Update line 1315 in app.py to bring information about the current live question ✓
+    - The user URL is just for the quiz ✓
+    - Add list in HMTL for User Question, showing all completed Quesstions ✓
+            - This is how the user will go back to previous Quesstions ✓
+    - Add next question button that will take user to current Active question ✓ (changed idea)
+    - Change next question button for host, to mark current question as completed and not active, next question as active and redirect host to new active question ✓
