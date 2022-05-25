@@ -1,5 +1,6 @@
 To Do:
 - Write full documentation on the ReadMe
+    - Include Gitignore and info.py information for when needing to set this up again
 
 - Set up proper sprint activities and agile methodology
 
