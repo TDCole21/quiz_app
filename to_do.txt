@@ -1,8 +1,6 @@
 To Do:
 - Write full documentation on the ReadMe
 
-- Gitignore for data.info.py
-
 - Set up proper sprint activities and agile methodology
 
 - Change some of the API queries from URL to POST requests:
@@ -93,6 +91,8 @@ To Do:
 
 
 Completed:
+- Gitignore for data.info.py ✓ (25/05/2022)
+
 - Start Quiz button ✓
     - Needs to make the current quiz active ✓ 
     - Also needs to make the first round active ✓
